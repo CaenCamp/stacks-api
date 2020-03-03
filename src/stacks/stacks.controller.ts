@@ -10,33 +10,21 @@ export class StacksController {
   }
 
   @Get()
-  @ApiBody({
-    description: 'List of stacks',
-  })
   findAll(): Promise<Stack[]> {
     return this.stacksService.findAll();
   }
 
   @Get(':id')
-  @ApiBody({
-    description: 'Detail of one stack',
-  })
   findOne(id: string): Promise<Stack> {
     return this.stacksService.findOne(id);
   }
 
   @Get(':id/languages')
-  @ApiBody({
-    description: 'Stack\'s languages',
-  })
   findLanguagesOfOne(id: string): Promise<Stack> {
     return this.stacksService.findOne(id);
   }
 
   @Get(':id/categories')
-  @ApiBody({
-    description: 'Stack\'s categories',
-  })
   findCategoriesOfOne(id: string): Promise<Stack> {
     return this.stacksService.findOne(id);
   }

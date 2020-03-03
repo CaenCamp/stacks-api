@@ -10,9 +10,6 @@ export class LanguagesController {
   }
 
   @Get()
-  @ApiBody({
-    description: 'List of languages',
-  })
   async findAll(): Promise<Language[]> {
     return this.languagesService.findAll();
   }

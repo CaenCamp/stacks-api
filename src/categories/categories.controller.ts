@@ -10,9 +10,6 @@ export class CategoriesController {
   }
 
   @Get()
-  @ApiBody({
-    description: 'List of stacks',
-  })
   async findAll(): Promise<Category[]> {
     return this.categoriesService.findAll();
   }

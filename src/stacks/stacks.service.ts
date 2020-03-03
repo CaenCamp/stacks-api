@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Stack } from './stack.interface';
-import { readdir } from 'fs-extra';
+import {readdir, readFileSync} from 'fs-extra';
 
 @Injectable()
 export class StacksService {
 
+  private getFile(path: string): Stack {
+    return JSON.parse(readFileSync(`${path}`, 'utf8'));
+  }
   async findAll(): Promise<Stack[]> {
-    const test = await readdir('/data/stacks');
-    console.log(test);
-    return [];
+    const path = './data/stacks';
+    const filesName = await readdir(path);
+    return filesName.map((name: string) => this.getFile(`${path}/${name}`));
   }
 
   async findOne(id: string): Promise<Stack> {
