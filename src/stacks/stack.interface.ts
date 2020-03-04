@@ -1,11 +1,12 @@
-import { Language } from '../languages';
-import { Category } from '../categories';
+
+import {RawCategory, RawLanguage} from '../data/model';
 
 export interface Stack {
-  id: number;
+  id: string;
   name: string;
-  url: string;
+  website: string;
+  source: string;
   icon: string;
-  languages: Language[];
-  categories: Category[];
+  languages: RawLanguage[];
+  categories: RawCategory[];
 }

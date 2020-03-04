@@ -1,0 +1,10 @@
+id: angularjs
+name: AngularJS
+website: https://angularjs.org/
+source: https://github.com/angular/angular.js/
+icon: <unknown>
+languages:
+  - javascript
+categories:
+  - web
+  - frontend

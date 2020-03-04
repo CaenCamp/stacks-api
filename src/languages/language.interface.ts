@@ -1,9 +1,9 @@
-import { Stack } from '../stacks';
+import {RawStack} from '../data/model';
 
 export interface Language {
-  id: number;
+  id: string;
   name: string;
   url: string;
   icon: string;
-  stacks: Stack[];
+  stacks: RawStack[];
 }

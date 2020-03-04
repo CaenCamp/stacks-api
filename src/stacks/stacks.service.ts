@@ -1,27 +1,59 @@
-import { Injectable } from '@nestjs/common';
-import { Stack } from './stack.interface';
-import {readdir, readFileSync} from 'fs-extra';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
+import {Stack} from './stack.interface';
+import {DataService, RawLanguage, RawStack} from '../data';
+import {Observable} from 'rxjs';
+import {filter, find, flatMap, map, toArray} from 'rxjs/operators';
+import {LanguagesService} from '../languages';
 
 @Injectable()
 export class StacksService {
 
-  private getFile(path: string): Stack {
-    return JSON.parse(readFileSync(`${path}`, 'utf8'));
-  }
-  async findAll(): Promise<Stack[]> {
-    const path = './data/stacks';
-    const filesName = await readdir(path);
-    return filesName.map((name: string) => this.getFile(`${path}/${name}`));
+  @Inject(forwardRef(() => StacksService))
+  private readonly languageService: LanguagesService;
+
+  private stacks$ = this.dataService.loadStacks();
+
+  constructor(private readonly dataService: DataService) {
   }
 
-  async findOne(id: string): Promise<Stack> {
-    return {
-      categories: null,
-      id: null,
-      icon: null,
-      name: null,
-      url: null,
-      languages: null,
-    };
+  findAll(): Observable<Stack[]> {
+    return this.stacks$.pipe(
+      flatMap((stacks: RawStack[]) => stacks),
+      flatMap((stack: RawStack) => this.findLanguages(stack.languages).pipe(
+        map((languages: RawLanguage[]) => ({
+            ...stack,
+            languages,
+            categories: [],
+          }),
+        )),
+      ),
+      toArray(),
+    );
+  }
+
+  findOne(id): Observable<Stack> {
+    return this.stacks$.pipe(
+      flatMap((stacks: RawStack[]) => stacks),
+      find((stack: RawStack) => stack.id === id),
+      flatMap((stack: RawStack) => this.findLanguages(stack.languages).pipe(
+        map((languages: RawLanguage[]) => ({
+            ...stack,
+            languages,
+            categories: [],
+          }),
+        )),
+      ));
+  }
+
+  findLanguages(languagesId: string[]) {
+    return this.languageService.findSome(languagesId);
+  }
+
+  findStacksForLanguage(languageId: string): Observable<RawStack[]> {
+    return this.stacks$.pipe(
+      flatMap((stacks: RawStack[]) => stacks),
+      filter((stack: RawStack) => stack.languages.includes(languageId)),
+      toArray(),
+    );
   }
 }

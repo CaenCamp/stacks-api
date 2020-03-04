@@ -1,0 +1,11 @@
+id: nestjs
+name: NestJS
+website: https://nestjs.com/
+source: https://github.com/nestjs/nest/
+icon: <unknown>
+languages:
+  - javascript
+  - typescript
+categories:
+  - web
+  - backtend
