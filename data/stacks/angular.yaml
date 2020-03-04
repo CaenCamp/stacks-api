@@ -1,0 +1,12 @@
+id: angular
+name: Angular
+website: https://angular.io/
+source: https://github.com/angular/angular
+icon: https://angular.io/assets/images/logos/angular/angular.svg
+languages:
+  - typescript
+  - javascript
+  - dart
+categories:
+  - web
+  - frontend
