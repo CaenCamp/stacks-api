@@ -83,11 +83,7 @@ export class DataService {
       flatMap(files =>
         from(files).pipe(
           map(file => `${folder}/${file}`),
-          flatMap(file =>
-            DataService.readFile(file).pipe(
-              map(content => DataService.loadYaml(file, content)),
-            ),
-          ),
+          flatMap(file => DataService.readFile(file).pipe(map(content => DataService.loadYaml(file, content)))),
         ),
       ),
     );

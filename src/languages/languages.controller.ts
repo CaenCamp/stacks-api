@@ -1,16 +1,14 @@
-import {Controller, Get, Param} from '@nestjs/common';
-import {LanguagesService} from './languages.service';
-import {ApiParam, ApiTags} from '@nestjs/swagger';
-import {Observable} from 'rxjs';
-import {Language} from './dto/language.dto';
-import {RawStack} from '../data/model';
-import {LanguageStack} from './dto';
+import { Controller, Get, Param } from '@nestjs/common';
+import { LanguagesService } from './languages.service';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
+import { Language } from './dto/language.dto';
+import { LanguageStack } from './dto';
 
 @ApiTags('Languages')
 @Controller('languages')
 export class LanguagesController {
-  constructor(private readonly languagesService: LanguagesService) {
-  }
+  constructor(private readonly languagesService: LanguagesService) {}
 
   @Get()
   findAll(): Observable<Language[]> {
@@ -22,7 +20,7 @@ export class LanguagesController {
     type: String,
     name: 'id',
   })
-  findOne(@Param() {id}: {id: string}): Observable<Language> {
+  findOne(@Param() { id }: { id: string }): Observable<Language> {
     return this.languagesService.findOne(id);
   }
 
@@ -31,7 +29,7 @@ export class LanguagesController {
     type: String,
     name: 'id',
   })
-  findStacks(@Param() {id}: {id: string}): Observable<LanguageStack[]> {
+  findStacks(@Param() { id }: { id: string }): Observable<LanguageStack[]> {
     return this.languagesService.findStacks(id);
   }
 }

@@ -1,15 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { DataService } from './data.service';
-import {RawLanguage, RawStack} from './model';
+import { RawLanguage } from './model';
 import { Observable } from 'rxjs';
-import {filter, find, flatMap, map, toArray} from 'rxjs/operators';
+import { filter, find, flatMap, toArray } from 'rxjs/operators';
 
-export interface LanguagesFilters {
-    languages?: string[];
+export interface LanguagesFilters {
+  languages?: string[];
 }
+
 @Injectable()
 export class LanguagesRepository {
   constructor(private readonly dataService: DataService) {}
+
+  private static filters(language: RawLanguage, filters?: LanguagesFilters): boolean {
+    if (filters == null) {
+      return true;
+    }
+    let result = true;
+    if (filters.languages != null) {
+      result = result && filters.languages.includes(language.id);
+    }
+    return result;
+  }
 
   findAll(filters?: LanguagesFilters): Observable<RawLanguage[]> {
     return this.dataService.languages$.pipe(
@@ -20,20 +32,9 @@ export class LanguagesRepository {
   }
 
   findOne(id: string): Observable<RawLanguage> {
-      return this.dataService.languages$.pipe(
-          flatMap((languages: RawLanguage[]) => languages),
-          find((language: RawLanguage) => language.id === id),
-      );
-  }
-
-  private static filters(language: RawLanguage, filters?: LanguagesFilters): boolean {
-      if (filters == null) {
-          return true;
-      }
-      let result = true;
-      if (filters.languages != null) {
-          result = result && filters.languages.includes(language.id);
-      }
-      return result;
+    return this.dataService.languages$.pipe(
+      flatMap((languages: RawLanguage[]) => languages),
+      find((language: RawLanguage) => language.id === id),
+    );
   }
 }

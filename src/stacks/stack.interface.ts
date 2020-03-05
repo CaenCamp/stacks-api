@@ -1,6 +1,5 @@
-
-import {Language} from '../languages';
-import {Category} from '../categories';
+import { Language } from '../languages';
+import { Category } from '../categories';
 
 export interface Stack {
   id: string;

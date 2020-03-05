@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Language, LanguageStack } from './dto';
-import {
-  LanguagesRepository,
-  RawLanguage,
-  RawStack,
-  StacksRepository,
-} from '../data';
+import { LanguagesRepository, RawLanguage, RawStack, StacksRepository } from '../data';
 import { Observable } from 'rxjs';
 import { flatMap, map, toArray } from 'rxjs/operators';
 
@@ -44,11 +39,7 @@ export class LanguagesService {
   findOne(id: string): Observable<Language> {
     return this.languagesRepository
       .findOne(id)
-      .pipe(
-        map((language: RawLanguage) =>
-          LanguagesService.rawToLanguage(language),
-        ),
-      );
+      .pipe(map((language: RawLanguage) => LanguagesService.rawToLanguage(language)));
   }
 
   findStacks(id: string): Observable<LanguageStack[]> {
