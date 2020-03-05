@@ -1,5 +1,3 @@
-import { Language } from '../languages';
-import { Category } from '../categories';
 
 export interface Stack {
   id: string;
@@ -7,6 +5,7 @@ export interface Stack {
   website: string;
   source: string;
   icon: string;
-  languages?: Language[];
-  categories?: Category[];
+  // @TODO Fixer les types
+  languages?: any[];
+  categories?: any[];
 }

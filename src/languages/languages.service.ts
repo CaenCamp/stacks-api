@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Language, LanguageStack } from './dto';
-import { LanguagesRepository, RawLanguage, RawStack, StacksRepository } from '../data';
+import { LanguageDto, LanguageStackDto } from './dto';
+import { LanguagesRepository, Language, RawStack, StacksRepository } from '../data';
 import { Observable } from 'rxjs';
 import { flatMap, map, toArray } from 'rxjs/operators';
 
@@ -11,15 +11,15 @@ export class LanguagesService {
     private readonly stacksRepository: StacksRepository,
   ) {}
 
-  private static toLanguageStack(stack: RawStack): LanguageStack {
+  private static toLanguageStack(stack: RawStack): LanguageStackDto {
     return {
       name: stack.name,
     };
   }
 
   // @TODO à supprimer
-  private static rawToLanguage(rawLanguage: RawLanguage): Language {
-    const { icon, id, name, url } = rawLanguage;
+  private static rawToLanguage(language: Language): LanguageDto {
+    const { icon, id, name, url } = language;
     return {
       icon,
       id,
@@ -28,23 +28,23 @@ export class LanguagesService {
     };
   }
 
-  findAll(): Observable<RawLanguage[]> {
+  findAll(): Observable<Language[]> {
     return this.languagesRepository.findAll().pipe(
-      flatMap((languages: RawLanguage[]) => languages),
-      map((language: RawLanguage) => LanguagesService.rawToLanguage(language)),
+      flatMap((languages: Language[]) => languages),
+      map((language: Language) => LanguagesService.rawToLanguage(language)),
       toArray(),
     );
   }
 
-  findOne(id: string): Observable<Language> {
+  findOne(id: string): Observable<LanguageDto> {
     return this.languagesRepository
       .findOne(id)
-      .pipe(map((language: RawLanguage) => LanguagesService.rawToLanguage(language)));
+      .pipe(map((language: Language) => LanguagesService.rawToLanguage(language)));
   }
 
-  findStacks(id: string): Observable<LanguageStack[]> {
+  findStacks(id: string): Observable<LanguageStackDto[]> {
     return this.languagesRepository.findOne(id).pipe(
-      flatMap((language: RawLanguage) =>
+      flatMap((language: Language) =>
         this.stacksRepository.findAll({
           languages: [language.id],
         }),

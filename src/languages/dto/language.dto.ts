@@ -1,4 +1,4 @@
-export interface Language {
+export class LanguageDto {
   id: string;
   name: string;
   url: string;

@@ -1,3 +1,3 @@
-export interface LanguageStack {
+export class LanguageStackDto {
   name: string;
 }

@@ -1,4 +1,4 @@
-export interface RawLanguage {
+export interface Language {
   id: string;
   name: string;
   url: string;
