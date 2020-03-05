@@ -1,5 +1,5 @@
 import { StackLanguageDto } from './language.dto';
-import { StackCategorieDto } from './categorie.dto';
+import { StackCategoryDto } from './category.dto';
 
 export class StackDto {
   id: string;
@@ -8,16 +8,16 @@ export class StackDto {
   source: string;
   icon: string;
   languages: StackLanguageDto[] = [];
-  categories: StackCategorieDto[] = [];
+  categories: StackCategoryDto[] = [];
 
   constructor(
     id: string,
-    name: string,
-    website: string,
-    source: string,
     icon: string,
+    name: string,
+    source: string,
+    website: string,
     languages?: StackLanguageDto[],
-    categories?: StackCategorieDto[],
+    categories?: StackCategoryDto[],
   ) {
     this.id = id;
     this.name = name;

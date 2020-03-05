@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataService } from './data.service';
 import { Stack } from './model';
-import { Observable } from 'rxjs';
-import { filter, find, first, flatMap, toArray } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, filter, find, first, flatMap, tap, toArray } from 'rxjs/operators';
 
 export interface StacksFilter {
   languages?: string[];
@@ -39,6 +39,7 @@ export class StacksRepository {
     return this.dataService.stacks$.pipe(
       flatMap((stacks: Stack[]) => stacks),
       first((stack: Stack) => stack.id === id),
+      catchError(error => throwError(error)),
     );
   }
 }
