@@ -2,8 +2,9 @@ import {Controller, Get, Param} from '@nestjs/common';
 import {LanguagesService} from './languages.service';
 import {ApiParam, ApiTags} from '@nestjs/swagger';
 import {Observable} from 'rxjs';
-import {Language} from './language.interface';
+import {Language} from './dto/language.dto';
 import {RawStack} from '../data/model';
+import {LanguageStack} from './dto';
 
 @ApiTags('Languages')
 @Controller('languages')
@@ -30,7 +31,7 @@ export class LanguagesController {
     type: String,
     name: 'id',
   })
-  findStacks(@Param() {id}: {id: string}): Observable<RawStack[]> {
+  findStacks(@Param() {id}: {id: string}): Observable<LanguageStack[]> {
     return this.languagesService.findStacks(id);
   }
 }

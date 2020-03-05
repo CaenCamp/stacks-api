@@ -9,7 +9,6 @@ import {DataModule} from './data';
     StacksModule,
     LanguagesModule,
     CategoriesModule,
-    DataModule,
   ],
 })
 export class AppModule {
