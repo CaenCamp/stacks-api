@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BehaviorSubject, from, Observable } from 'rxjs';
-import { Language, RawCategory, Stack } from './model';
+import { Language, Category, Stack } from './model';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -16,7 +16,7 @@ export class DataService {
 
   private stacksSubject = new BehaviorSubject<Stack[]>([]);
   private languagesSubject = new BehaviorSubject<Language[]>([]);
-  private categorySubject = new BehaviorSubject<RawCategory[]>([]);
+  private categorySubject = new BehaviorSubject<Category[]>([]);
 
   constructor() {
     this.loadLanguages()
@@ -38,7 +38,7 @@ export class DataService {
     return this.languagesSubject.asObservable().pipe(first());
   }
 
-  public get categories$(): Observable<RawCategory[]> {
+  public get categories$(): Observable<Category[]> {
     return this.categorySubject.asObservable().pipe(first());
   }
 
@@ -91,10 +91,10 @@ export class DataService {
     );
   }
 
-  private loadCategories(): Observable<RawCategory[]> {
+  private loadCategories(): Observable<Category[]> {
     return this.readDataFolder(this.CATEGORIES).pipe(
-      map((category: RawCategory) => plainToClass(RawCategory, category)),
-      tap((category: RawCategory) => validate(category)),
+      map((category: Category) => plainToClass(Category, category)),
+      tap((category: Category) => validate(category)),
       toArray(),
     );
   }

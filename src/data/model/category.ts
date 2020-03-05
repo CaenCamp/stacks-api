@@ -1,6 +1,6 @@
 import { IsDefined } from 'class-validator';
 
-export class RawCategory {
+export class Category {
   @IsDefined()
   id: string;
   @IsDefined()
