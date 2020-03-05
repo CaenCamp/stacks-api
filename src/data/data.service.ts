@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { RawCategory, RawLanguage, RawStack } from './model';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import { flatMap, map, toArray } from 'rxjs/operators';
+import { first, flatMap, map, tap, toArray } from 'rxjs/operators';
 
 @Injectable()
 export class DataService {
@@ -12,9 +12,33 @@ export class DataService {
   private readonly LANGUAGES = 'languages';
   private readonly STACKS = 'stacks';
 
-  public stacks$ = this.loadStacks();
-  public languages$ = this.loadLanguages();
-  public categories$ = this.loadCategories();
+  private stacksSubject = new BehaviorSubject<RawStack[]>([]);
+  private languagesSubject = new BehaviorSubject<RawLanguage[]>([]);
+  private categorySubject = new BehaviorSubject<RawCategory[]>([]);
+
+  constructor() {
+    this.loadLanguages()
+      .pipe(tap(languages => this.languagesSubject.next(languages)))
+      .subscribe();
+    this.loadCategories()
+      .pipe(tap(categories => this.categorySubject.next(categories)))
+      .subscribe();
+    this.loadStacks()
+      .pipe(tap(stacks => this.stacksSubject.next(stacks)))
+      .subscribe();
+  }
+
+  public get stacks$(): Observable<RawStack[]> {
+    return this.stacksSubject.asObservable().pipe(first());
+  }
+
+  public get languages$(): Observable<RawLanguage[]> {
+    return this.languagesSubject.asObservable().pipe(first());
+  }
+
+  public get categories$(): Observable<RawCategory[]> {
+    return this.categorySubject.asObservable().pipe(first());
+  }
 
   private static readDir(filePath: string): Observable<string[]> {
     return new Observable<string[]>(subscriber => {
@@ -53,18 +77,6 @@ export class DataService {
     return struct;
   }
 
-  public loadCategories(): Observable<RawCategory[]> {
-    return this.readDataFolder(this.CATEGORIES).pipe(toArray());
-  }
-
-  public loadLanguages(): Observable<RawLanguage[]> {
-    return this.readDataFolder(this.LANGUAGES).pipe(toArray());
-  }
-
-  public loadStacks(): Observable<RawStack[]> {
-    return this.readDataFolder(this.STACKS).pipe(toArray());
-  }
-
   public readDataFolder(name: string): Observable<any> {
     const folder = `${process.cwd()}/data/${name}`;
     return DataService.readDir(folder).pipe(
@@ -78,6 +90,21 @@ export class DataService {
           ),
         ),
       ),
+    );
+  }
+
+  private loadCategories(): Observable<RawCategory[]> {
+    return this.readDataFolder(this.CATEGORIES).pipe(toArray());
+  }
+
+  private loadLanguages(): Observable<RawLanguage[]> {
+    return this.readDataFolder(this.LANGUAGES).pipe(toArray());
+  }
+
+  private loadStacks(): Observable<RawStack[]> {
+    return this.readDataFolder(this.STACKS).pipe(
+      tap(stack => stack),
+      toArray(),
     );
   }
 }
