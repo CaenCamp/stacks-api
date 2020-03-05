@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Stack } from './stack.interface';
+import { StackDto } from './dto';
 import { LanguagesRepository, RawCategory, Language, RawStack, StacksRepository } from '../data';
 import { Observable } from 'rxjs';
 import { flatMap, map, toArray } from 'rxjs/operators';
@@ -11,7 +11,7 @@ export class StacksService {
     private readonly languagesRepository: LanguagesRepository,
   ) {}
 
-  public findAll(): Observable<Stack[]> {
+  public findAll(): Observable<StackDto[]> {
     return this.stacksRepository.findAll().pipe(
       flatMap((stacks: RawStack[]) => stacks),
       map((stack: RawStack) => this.rawToStack(stack)),
@@ -19,7 +19,7 @@ export class StacksService {
     );
   }
 
-  public findOne(id: string): Observable<Stack> {
+  public findOne(id: string): Observable<StackDto> {
     return this.stacksRepository
       .findOne(id)
       .pipe(
@@ -32,9 +32,9 @@ export class StacksService {
   }
 
   // @TODO à supprimer
-  private rawToStack(rawStack: RawStack, languages?: Language[], categories?: RawCategory[]): Stack {
+  private rawToStack(rawStack: RawStack, languages?: Language[], categories?: RawCategory[]): StackDto {
     const { icon, id, name, source, website } = rawStack;
-    let ret: Stack = {
+    let ret: StackDto = {
       icon,
       id,
       name,
