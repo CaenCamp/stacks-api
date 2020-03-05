@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataService } from './data.service';
 import { Stack } from './model';
 import { Observable } from 'rxjs';
-import { filter, find, flatMap, toArray } from 'rxjs/operators';
+import { filter, find, first, flatMap, toArray } from 'rxjs/operators';
 
 export interface StacksFilter {
   languages?: string[];
@@ -38,7 +38,7 @@ export class StacksRepository {
   public findOne(id: string): Observable<Stack> {
     return this.dataService.stacks$.pipe(
       flatMap((stacks: Stack[]) => stacks),
-      find((stack: Stack) => stack.id === id),
+      first((stack: Stack) => stack.id === id),
     );
   }
 }
