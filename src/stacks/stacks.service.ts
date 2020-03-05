@@ -1,58 +1,52 @@
-import {forwardRef, Inject, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {Stack} from './stack.interface';
-import {DataService, RawLanguage, RawStack} from '../data';
+import {DataService, RawCategory, RawLanguage, RawStack} from '../data';
 import {Observable} from 'rxjs';
 import {filter, find, flatMap, map, toArray} from 'rxjs/operators';
-import {LanguagesService} from '../languages';
 
 @Injectable()
 export class StacksService {
 
-  @Inject(forwardRef(() => StacksService))
-  private readonly languageService: LanguagesService;
-
-  private stacks$ = this.dataService.loadStacks();
-
   constructor(private readonly dataService: DataService) {
   }
 
-  findAll(): Observable<Stack[]> {
-    return this.stacks$.pipe(
+  // @TODO à supprimer
+  private rawToStack(rawStack: RawStack, languages?: RawLanguage[], categories?: RawCategory[]): Stack {
+    const {icon, id, name, source, website} = rawStack;
+    let ret: Stack = {
+      icon, id, name, source, website,
+    };
+    if (languages && languages.length > 0) {
+      ret = {...ret, languages};
+    }
+    if (categories && categories.length > 0) {
+      ret = {...ret, categories};
+    }
+    return ret;
+  }
+
+  public findAll(): Observable<Stack[]> {
+    return this.dataService.stacks$.pipe(
       flatMap((stacks: RawStack[]) => stacks),
-      flatMap((stack: RawStack) => this.findLanguages(stack.languages).pipe(
-        map((languages: RawLanguage[]) => ({
-            ...stack,
-            languages,
-            categories: [],
-          }),
-        )),
-      ),
+      map((stack: RawStack) => this.rawToStack(stack)),
       toArray(),
     );
   }
 
-  findOne(id): Observable<Stack> {
-    return this.stacks$.pipe(
+  public findOne(id): Observable<Stack> {
+    return this.dataService.stacks$.pipe(
       flatMap((stacks: RawStack[]) => stacks),
       find((stack: RawStack) => stack.id === id),
       flatMap((stack: RawStack) => this.findLanguages(stack.languages).pipe(
-        map((languages: RawLanguage[]) => ({
-            ...stack,
-            languages,
-            categories: [],
-          }),
-        )),
+        map((languages: RawLanguage[]) => this.rawToStack(stack, languages, [])),
+        ),
       ));
   }
 
-  findLanguages(languagesId: string[]) {
-    return this.languageService.findSome(languagesId);
-  }
-
-  findStacksForLanguage(languageId: string): Observable<RawStack[]> {
-    return this.stacks$.pipe(
-      flatMap((stacks: RawStack[]) => stacks),
-      filter((stack: RawStack) => stack.languages.includes(languageId)),
+  public findLanguages(languagesId: string[]): Observable<RawLanguage[]> {
+    return this.dataService.languages$.pipe(
+      flatMap((languages: RawLanguage[]) => languages),
+      filter((language: RawLanguage) => languagesId.includes(language.id)),
       toArray(),
     );
   }

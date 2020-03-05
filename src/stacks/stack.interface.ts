@@ -1,5 +1,6 @@
 
-import {RawCategory, RawLanguage} from '../data/model';
+import {Language} from '../languages';
+import {Category} from '../categories';
 
 export interface Stack {
   id: string;
@@ -7,6 +8,6 @@ export interface Stack {
   website: string;
   source: string;
   icon: string;
-  languages: RawLanguage[];
-  categories: RawCategory[];
+  languages?: Language[];
+  categories?: Category[];
 }

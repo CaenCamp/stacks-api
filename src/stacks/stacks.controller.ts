@@ -10,16 +10,6 @@ export class StacksController {
   constructor(private readonly stacksService: StacksService) {
   }
 
-  @Get(':id/languages')
-  findLanguagesOfOne(id: string): Observable<Stack> {
-    return this.stacksService.findOne(id);
-  }
-
-  @Get(':id/categories')
-  findCategoriesOfOne(id: string): Observable<Stack> {
-    return this.stacksService.findOne(id);
-  }
-
   @Get()
   findAll(): Observable<Stack[]> {
     return this.stacksService.findAll();
@@ -30,8 +20,25 @@ export class StacksController {
     type: String,
     name: 'id',
   })
-  findOne(@Param() {id}: {id: string}): Observable<Stack> {
+  findOne(@Param() {id}: { id: string }): Observable<Stack> {
     return this.stacksService.findOne(id);
   }
 
+  @Get(':id/languages')
+  @ApiParam({
+    type: String,
+    name: 'id',
+  })
+  findLanguagesOfOne(@Param() {id}: { id: string }): Observable<Stack> {
+    return this.stacksService.findOne(id);
+  }
+
+  @Get(':id/categories')
+  @ApiParam({
+    type: String,
+    name: 'id',
+  })
+  findCategoriesOfOne(@Param() {id}: { id: string }): Observable<Stack> {
+    return this.stacksService.findOne(id);
+  }
 }

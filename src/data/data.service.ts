@@ -12,6 +12,10 @@ export class DataService {
   private readonly LANGUAGES = 'languages';
   private readonly STACKS = 'stacks';
 
+  public stacks$ = this.loadStacks();
+  public languages$ = this.loadLanguages();
+  public categories$ = this.loadCategories();
+
   private static readDir(filePath: string): Observable<string[]> {
     return new Observable<string[]>(subscriber => {
       fs.readdir(filePath, (err, files) => {

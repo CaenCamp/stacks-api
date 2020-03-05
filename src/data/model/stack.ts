@@ -4,6 +4,6 @@ export interface RawStack {
   website: string;
   source: string;
   icon: string;
-  languages: string[];
-  categories: string[];
+  languages?: string[];
+  categories?: string[];
 }
