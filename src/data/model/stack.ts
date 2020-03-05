@@ -1,4 +1,4 @@
-export interface RawStack {
+export interface Stack {
   id: string;
   name: string;
   website: string;

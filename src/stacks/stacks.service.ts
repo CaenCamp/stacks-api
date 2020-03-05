@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { StackDto } from './dto';
-import { LanguagesRepository, RawCategory, Language, RawStack, StacksRepository } from '../data';
+import { LanguagesRepository, RawCategory, Language, Stack, StacksRepository } from '../data';
 import { Observable } from 'rxjs';
 import { flatMap, map, toArray } from 'rxjs/operators';
 
@@ -13,8 +13,8 @@ export class StacksService {
 
   public findAll(): Observable<StackDto[]> {
     return this.stacksRepository.findAll().pipe(
-      flatMap((stacks: RawStack[]) => stacks),
-      map((stack: RawStack) => this.rawToStack(stack)),
+      flatMap((stacks: Stack[]) => stacks),
+      map((stack: Stack) => this.rawToStack(stack)),
       toArray(),
     );
   }
@@ -23,7 +23,7 @@ export class StacksService {
     return this.stacksRepository
       .findOne(id)
       .pipe(
-        flatMap((stack: RawStack) =>
+        flatMap((stack: Stack) =>
           this.languagesRepository
             .findAll({ languages: stack.languages })
             .pipe(map((languages: Language[]) => this.rawToStack(stack, languages, []))),
@@ -32,7 +32,7 @@ export class StacksService {
   }
 
   // @TODO à supprimer
-  private rawToStack(rawStack: RawStack, languages?: Language[], categories?: RawCategory[]): StackDto {
+  private rawToStack(rawStack: Stack, languages?: Language[], categories?: RawCategory[]): StackDto {
     const { icon, id, name, source, website } = rawStack;
     let ret: StackDto = {
       icon,

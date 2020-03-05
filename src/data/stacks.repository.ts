@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataService } from './data.service';
-import { RawStack } from './model';
+import { Stack } from './model';
 import { Observable } from 'rxjs';
 import { filter, find, flatMap, toArray } from 'rxjs/operators';
 
@@ -12,7 +12,7 @@ export interface StacksFilter {
 export class StacksRepository {
   constructor(private readonly dataService: DataService) {}
 
-  private static filters(stack: RawStack, filters?: StacksFilter): boolean {
+  private static filters(stack: Stack, filters?: StacksFilter): boolean {
     if (filters == null) {
       return true;
     }
@@ -27,18 +27,18 @@ export class StacksRepository {
     return result;
   }
 
-  public findAll(filters?: StacksFilter): Observable<RawStack[]> {
+  public findAll(filters?: StacksFilter): Observable<Stack[]> {
     return this.dataService.stacks$.pipe(
-      flatMap((stacks: RawStack[]) => stacks),
-      filter((stack: RawStack) => StacksRepository.filters(stack, filters)),
+      flatMap((stacks: Stack[]) => stacks),
+      filter((stack: Stack) => StacksRepository.filters(stack, filters)),
       toArray(),
     );
   }
 
-  public findOne(id: string): Observable<RawStack> {
+  public findOne(id: string): Observable<Stack> {
     return this.dataService.stacks$.pipe(
-      flatMap((stacks: RawStack[]) => stacks),
-      find((stack: RawStack) => stack.id === id),
+      flatMap((stacks: Stack[]) => stacks),
+      find((stack: Stack) => stack.id === id),
     );
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LanguageDto, LanguageStackDto } from './dto';
-import { LanguagesRepository, Language, RawStack, StacksRepository } from '../data';
+import { LanguagesRepository, Language, Stack, StacksRepository } from '../data';
 import { Observable } from 'rxjs';
 import { flatMap, map, toArray } from 'rxjs/operators';
 
@@ -11,7 +11,7 @@ export class LanguagesService {
     private readonly stacksRepository: StacksRepository,
   ) {}
 
-  private static toLanguageStack(stack: RawStack): LanguageStackDto {
+  private static toLanguageStack(stack: Stack): LanguageStackDto {
     return {
       name: stack.name,
     };
@@ -49,8 +49,8 @@ export class LanguagesService {
           languages: [language.id],
         }),
       ),
-      flatMap((stacks: RawStack[]) => stacks),
-      map((stack: RawStack) => LanguagesService.toLanguageStack(stack)),
+      flatMap((stacks: Stack[]) => stacks),
+      map((stack: Stack) => LanguagesService.toLanguageStack(stack)),
       toArray(),
     );
   }
