@@ -12,20 +12,13 @@ export class LanguagesService {
   ) {}
 
   private static toLanguageStack(stack: Stack): LanguageStackDto {
-    return {
-      name: stack.name,
-    };
+    return new LanguageStackDto(stack.name);
   }
 
   // @TODO à supprimer
   private static rawToLanguage(language: Language): LanguageDto {
     const { icon, id, name, url } = language;
-    return {
-      icon,
-      id,
-      name,
-      url,
-    };
+    return new LanguageDto(id, name, url, icon);
   }
 
   findAll(): Observable<Language[]> {

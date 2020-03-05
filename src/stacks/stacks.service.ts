@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StackDto } from './dto';
+import {StackCategorieDto, StackDto, StackLanguageDto} from './dto';
 import { LanguagesRepository, RawCategory, Language, Stack, StacksRepository } from '../data';
 import { Observable } from 'rxjs';
 import { flatMap, map, toArray } from 'rxjs/operators';
@@ -34,19 +34,14 @@ export class StacksService {
   // @TODO à supprimer
   private rawToStack(rawStack: Stack, languages?: Language[], categories?: RawCategory[]): StackDto {
     const { icon, id, name, source, website } = rawStack;
-    let ret: StackDto = {
-      icon,
-      id,
-      name,
-      source,
-      website,
-    };
-    if (languages && languages.length > 0) {
-      ret = { ...ret, languages };
-    }
-    if (categories && categories.length > 0) {
-      ret = { ...ret, categories };
-    }
-    return ret;
+    return new StackDto(
+        id,
+        name,
+        website,
+        source,
+        icon,
+        languages?.map(language => new StackLanguageDto(language.name)),
+        categories?.map(category => new StackCategorieDto(category.name)),
+    );
   }
 }

@@ -1,3 +1,7 @@
 export class LanguageStackDto {
   name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
 }
