@@ -1,8 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import {Controller, Get, Param} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { ApiTags } from '@nestjs/swagger';
+import {ApiParam, ApiTags} from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { Category } from './category.interface';
+import {CategoryDto, CategoryStackDto} from './dto';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -10,11 +10,25 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  getAll(): Observable<Category[]> {
+  findAll(): Observable<CategoryDto[]> {
     return this.categoriesService.findAll();
   }
-}
 
-// GET /categories
-// GET /categories/<category>
-// GET /categories/<category>/stacks
+  @Get(':id')
+  @ApiParam({
+    type: String,
+    name: 'id',
+  })
+  findOne(@Param() { id }: { id: string }): Observable<CategoryDto> {
+    return this.categoriesService.findOne(id);
+  }
+
+  @Get(':id/stacks')
+  @ApiParam({
+    type: String,
+    name: 'id',
+  })
+  findStacks(@Param() { id }: { id: string }): Observable<CategoryStackDto[]> {
+    return this.categoriesService.findStacks(id);
+  }
+}

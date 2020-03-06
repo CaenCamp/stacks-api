@@ -6,6 +6,7 @@ import { DataService } from './data.service';
 
 export interface StacksFilter {
   languages?: string[];
+  categories?: string[];
 }
 
 @Injectable()
@@ -22,6 +23,13 @@ export class StacksRepository {
         result &&
         filters.languages.reduce((contains: boolean, currentValue: string) => {
           return contains || (stack.languages ?? []).includes(currentValue);
+        }, false);
+    }
+    if (filters.categories != null) {
+      result =
+        result &&
+        filters.categories.reduce((contains: boolean, currentValue: string) => {
+          return contains || (stack.categories ?? []).includes(currentValue);
         }, false);
     }
     return result;
