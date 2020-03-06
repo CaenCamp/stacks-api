@@ -1,15 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CATEGORIES, DataService, LANGUAGES, STACKS } from './data.service';
+import { CATEGORIES, DataLoader, LANGUAGES, STACKS } from './data.loader';
 
-describe('DataService', () => {
-  let service: DataService;
+describe('DataLoader', () => {
+  let service: DataLoader;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DataService],
+      providers: [DataLoader],
     }).compile();
-
-    service = module.get<DataService>(DataService);
+    service = module.get<DataLoader>(DataLoader);
   });
 
   it('should be defined', () => {

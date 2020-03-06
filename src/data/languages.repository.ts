@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DataService } from './data.service';
 import { Language } from './model';
 import { Observable } from 'rxjs';
 import { filter, first, flatMap, toArray } from 'rxjs/operators';
+import { DataService } from './data.service';
 
 export interface LanguagesFilters {
   languages?: string[];
@@ -10,7 +10,7 @@ export interface LanguagesFilters {
 
 @Injectable()
 export class LanguagesRepository {
-  constructor(private readonly dataService: DataService) {}
+  constructor(private readonly dataRepository: DataService) {}
 
   private static filters(language: Language, filters?: LanguagesFilters): boolean {
     if (filters == null) {
@@ -24,7 +24,7 @@ export class LanguagesRepository {
   }
 
   findAll(filters?: LanguagesFilters): Observable<Language[]> {
-    return this.dataService.languages$.pipe(
+    return this.dataRepository.languages$.pipe(
       flatMap((languages: Language[]) => languages),
       filter((language: Language) => LanguagesRepository.filters(language, filters)),
       toArray(),
@@ -32,7 +32,7 @@ export class LanguagesRepository {
   }
 
   findOne(id: string): Observable<Language> {
-    return this.dataService.languages$.pipe(
+    return this.dataRepository.languages$.pipe(
       flatMap((languages: Language[]) => languages),
       first((language: Language) => language.id === id),
     );

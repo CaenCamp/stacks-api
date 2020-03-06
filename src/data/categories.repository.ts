@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DataService } from './data.service';
 import { Category } from './model';
 import { Observable } from 'rxjs';
 import { filter, first, flatMap, toArray } from 'rxjs/operators';
+import { DataService } from './data.service';
 
 export interface CategoriesFilters {
   categories?: string[];
@@ -10,7 +10,7 @@ export interface CategoriesFilters {
 
 @Injectable()
 export class CategoriesRepository {
-  constructor(private readonly dataService: DataService) {}
+  constructor(private readonly dataRepository: DataService) {}
 
   private static filters(category: Category, filters?: CategoriesFilters): boolean {
     if (filters == null) {
@@ -24,7 +24,7 @@ export class CategoriesRepository {
   }
 
   findAll(filters?: CategoriesFilters): Observable<Category[]> {
-    return this.dataService.categories$.pipe(
+    return this.dataRepository.categories$.pipe(
       flatMap((categories: Category[]) => categories),
       filter((category: Category) => CategoriesRepository.filters(category, filters)),
       toArray(),
@@ -32,7 +32,7 @@ export class CategoriesRepository {
   }
 
   findOne(id: string): Observable<Category> {
-    return this.dataService.categories$.pipe(
+    return this.dataRepository.categories$.pipe(
       flatMap((categories: Category[]) => categories),
       first((category: Category) => category.id === id),
     );
