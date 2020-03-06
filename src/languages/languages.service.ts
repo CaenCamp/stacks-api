@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { LanguageDto, LanguageStackDto } from './dto';
 import { LanguagesRepository, Language, Stack, StacksRepository } from '../data';
 import { Observable } from 'rxjs';
-import { flatMap, map, toArray } from 'rxjs/operators';
+import { catchError, flatMap, map, toArray } from 'rxjs/operators';
 
 @Injectable()
 export class LanguagesService {
@@ -11,32 +11,29 @@ export class LanguagesService {
     private readonly stacksRepository: StacksRepository,
   ) {}
 
-  private static toLanguageStack(stack: Stack): LanguageStackDto {
-    const { id, icon, name, source, website } = stack;
-    return new LanguageStackDto(id, icon, name, source, website);
-  }
+  private NOT_FOUND_ERROR = 'EmptyError';
 
-  // @TODO à supprimer
-  private static rawToLanguage(language: Language): LanguageDto {
-    const { icon, id, name, url } = language;
-    return new LanguageDto(id, icon, name, url);
-  }
-
-  findAll(): Observable<Language[]> {
+  public findAll(): Observable<Language[]> {
     return this.languagesRepository.findAll().pipe(
       flatMap((languages: Language[]) => languages),
-      map((language: Language) => LanguagesService.rawToLanguage(language)),
+      map((language: Language) => LanguagesService.getLanguageDto(language)),
       toArray(),
+      catchError((error: Error) => {
+        throw this.handleError(error);
+      }),
     );
   }
 
-  findOne(id: string): Observable<LanguageDto> {
-    return this.languagesRepository
-      .findOne(id)
-      .pipe(map((language: Language) => LanguagesService.rawToLanguage(language)));
+  public findOne(id: string): Observable<LanguageDto> {
+    return this.languagesRepository.findOne(id).pipe(
+      map((language: Language) => LanguagesService.getLanguageDto(language)),
+      catchError((error: Error) => {
+        throw this.handleError(error, id);
+      }),
+    );
   }
 
-  findStacks(id: string): Observable<LanguageStackDto[]> {
+  public findStacks(id: string): Observable<LanguageStackDto[]> {
     return this.languagesRepository.findOne(id).pipe(
       flatMap((language: Language) =>
         this.stacksRepository.findAll({
@@ -44,8 +41,28 @@ export class LanguagesService {
         }),
       ),
       flatMap((stacks: Stack[]) => stacks),
-      map((stack: Stack) => LanguagesService.toLanguageStack(stack)),
+      map((stack: Stack) => LanguagesService.getStackDto(stack)),
       toArray(),
+      catchError((error: Error) => {
+        throw this.handleError(error, id);
+      }),
     );
+  }
+
+  private handleError(error: Error, id?: string): HttpException {
+    if (error.name === this.NOT_FOUND_ERROR) {
+      return new NotFoundException(`Language "${id}" was not found`);
+    }
+    return new InternalServerErrorException(error);
+  }
+
+  private static getStackDto(stack: Stack): LanguageStackDto {
+    const { id, icon, name, source, website } = stack;
+    return new LanguageStackDto(id, icon, name, source, website);
+  }
+
+  private static getLanguageDto(language: Language): LanguageDto {
+    const { icon, id, name, url } = language;
+    return new LanguageDto(id, icon, name, url);
   }
 }
