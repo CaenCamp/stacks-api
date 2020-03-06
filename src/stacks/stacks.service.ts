@@ -1,8 +1,8 @@
 import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { StackCategoryDto, StackDto, StackLanguageDto } from './dto';
 import { LanguagesRepository, Category, Language, Stack, StacksRepository, CategoriesRepository } from '../data';
-import { Observable } from 'rxjs';
-import {catchError, flatMap, map, tap, toArray} from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, flatMap, map, tap, toArray } from 'rxjs/operators';
 
 @Injectable()
 export class StacksService {
@@ -12,25 +12,19 @@ export class StacksService {
     private readonly categoriesRepository: CategoriesRepository,
   ) {}
 
-  private NOT_FOUND_ERROR = 'EmptyError';
-
   public findAll(): Observable<StackDto[]> {
     return this.stacksRepository.findAll().pipe(
       flatMap((stacks: Stack[]) => stacks),
       map((stack: Stack) => StacksService.getStackDto(stack)),
       toArray(),
-      catchError(error => {
-        throw this.handleError(error);
-      }),
+      catchError((error: Error) => throwError(error)),
     );
   }
 
   public findOne(id: string): Observable<StackDto> {
     return this.stacksRepository.findOne(id).pipe(
       map((stack: Stack) => StacksService.getStackDto(stack)),
-      catchError(error => {
-        throw this.handleError(error, id);
-      }),
+      catchError((error: Error) => throwError(error)),
     );
   }
 
@@ -40,9 +34,7 @@ export class StacksService {
       flatMap((languages: Language[]) => languages),
       map((language: Language) => StacksService.getLanguageDto(language)),
       toArray(),
-      catchError((error: Error) => {
-        throw this.handleError(error, id);
-      }),
+      catchError((error: Error) => throwError(error)),
     );
   }
 
@@ -52,9 +44,7 @@ export class StacksService {
       flatMap((categories: Category[]) => categories),
       map((category: Category) => StacksService.getCategoryDto(category)),
       toArray(),
-      catchError((error: Error) => {
-        throw this.handleError(error, id);
-      }),
+      catchError((error: Error) => throwError(error)),
     );
   }
 
@@ -70,13 +60,6 @@ export class StacksService {
       .pipe(map((categories: Category[]) => categories));
   }
 
-  private handleError(error: Error, id?: string): HttpException {
-    if (error.name === this.NOT_FOUND_ERROR) {
-      return new NotFoundException(`Stack "${id}" was not found`);
-    }
-    return new InternalServerErrorException(error);
-  }
-
   private static getLanguageDto(language: Language): StackLanguageDto {
     const { name, icon, url, id } = language;
     return new StackLanguageDto(id, icon, name, url);
@@ -89,12 +72,6 @@ export class StacksService {
 
   private static getStackDto(stack: Stack): StackDto {
     const { icon, id, name, source, website } = stack;
-    return new StackDto(
-      id,
-      icon,
-      name,
-      source,
-      website,
-    );
+    return new StackDto(id, icon, name, source, website);
   }
 }
