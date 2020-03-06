@@ -31,7 +31,7 @@ describe('DataLoader', () => {
       .pipe(flatMap(stacks => stacks))
       .subscribe({
         next: (stack: Stack) => {
-          stack.categories.forEach(category => {
+          stack.categories?.forEach(category => {
             const exists = fileExistsSync(`${service.dataFolderPath}/${CATEGORIES}/${category}.yaml`);
             expect(exists, `${stack.name} has a category '${category}' that does not exist`).toBeTruthy();
           });
@@ -45,7 +45,7 @@ describe('DataLoader', () => {
       .pipe(flatMap(stacks => stacks))
       .subscribe({
         next: (stack: Stack) => {
-          stack.languages.forEach(language => {
+          stack.languages?.forEach(language => {
             const exists = fileExistsSync(`${service.dataFolderPath}/${LANGUAGES}/${language}.yaml`);
             expect(exists, `${stack.name} has a language '${language}' that does not exist`).toBeTruthy();
           });
