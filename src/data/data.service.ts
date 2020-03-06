@@ -1,18 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { BehaviorSubject, from, Observable } from 'rxjs';
-import { Language, Category, Stack } from './model';
+import {BehaviorSubject, from, Observable, ObservedValueOf, OperatorFunction} from 'rxjs';
+import { Category, Language, Stack } from './model';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import { first, flatMap, map, tap, toArray } from 'rxjs/operators';
+import { filter, first, flatMap, map, tap, toArray } from 'rxjs/operators';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 
+export const CATEGORIES = 'categories';
+export const LANGUAGES = 'languages';
+export const STACKS = 'stacks';
+
+declare type ClassType<T> = new (...args: any[]) => T;
+
 @Injectable()
 export class DataService {
-  private readonly CATEGORIES = 'categories';
-  private readonly LANGUAGES = 'languages';
-  private readonly STACKS = 'stacks';
 
   private stacksSubject = new BehaviorSubject<Stack[]>([]);
   private languagesSubject = new BehaviorSubject<Language[]>([]);
@@ -79,39 +82,37 @@ export class DataService {
     return struct;
   }
 
-  public readDataFolder(name: string): Observable<any> {
+  public readDataFolder(name: string): Observable<string> {
     const folder = `${process.cwd()}/data/${name}`;
     return DataService.readDir(folder).pipe(
       flatMap(files =>
         from(files).pipe(
+          filter(file => path.parse(file).ext === '.yaml'),
           map(file => `${folder}/${file}`),
-          flatMap(file => DataService.readFile(file).pipe(map(content => DataService.loadYaml(file, content)))),
         ),
       ),
     );
   }
 
-  private loadCategories(): Observable<Category[]> {
-    return this.readDataFolder(this.CATEGORIES).pipe(
-      map((category: Category) => plainToClass(Category, category)),
-      tap((category: Category) => validate(category)),
-      toArray(),
+  public readDataYaml<T>(cls: ClassType<T>): OperatorFunction<string, T> {
+    return flatMap((file: string) =>
+      DataService.readFile(file).pipe(
+        map(content => DataService.loadYaml(file, content)),
+        map((category: T) => plainToClass(cls, category)),
+        tap((category: T) => validate(category)),
+      ),
     );
+  }
+
+  private loadCategories(): Observable<Category[]> {
+    return this.readDataFolder(CATEGORIES).pipe(this.readDataYaml(Category), toArray());
   }
 
   private loadLanguages(): Observable<Language[]> {
-    return this.readDataFolder(this.LANGUAGES).pipe(
-      map((language: Language) => plainToClass(Language, language)),
-      tap((language: Language) => validate(language)),
-      toArray(),
-    );
+    return this.readDataFolder(LANGUAGES).pipe(this.readDataYaml(Language), toArray());
   }
 
   private loadStacks(): Observable<Stack[]> {
-    return this.readDataFolder(this.STACKS).pipe(
-      map((stack: Stack) => plainToClass(Stack, stack)),
-      tap((stack: Stack) => validate(stack)),
-      toArray(),
-    );
+    return this.readDataFolder(STACKS).pipe(this.readDataYaml(Stack), toArray());
   }
 }
