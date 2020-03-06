@@ -54,8 +54,12 @@ export class DataLoader {
     return struct;
   }
 
+  public get dataFolderPath(): string {
+    return `${process.cwd()}/data`;
+  }
+
   public readDataFolder(name: string): Observable<string> {
-    const folder = `${process.cwd()}/data/${name}`;
+    const folder = `${this.dataFolderPath}/${name}`;
     return DataLoader.readDir(folder).pipe(
       flatMap(files =>
         from(files).pipe(
