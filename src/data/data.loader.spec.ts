@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CATEGORIES, DataLoader, LANGUAGES, STACKS } from './data.loader';
-import { flatMap } from 'rxjs/operators';
-import { Stack } from './model';
-import { fileExistsSync } from 'tsconfig-paths/lib/filesystem';
+import {Test, TestingModule} from '@nestjs/testing';
+import {CATEGORIES, DataLoader, LANGUAGES, STACKS} from './data.loader';
+import {flatMap} from 'rxjs/operators';
+import {Stack} from './model';
+import {fileExistsSync} from 'tsconfig-paths/lib/filesystem';
 
 describe('DataLoader', () => {
   let service: DataLoader;

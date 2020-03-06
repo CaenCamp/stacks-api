@@ -1,10 +1,9 @@
-import { Test } from '@nestjs/testing';
-import { CategoriesService } from './categories.service';
-import { CategoriesController } from './categories.controller';
-import { CategoryDto, CategoryStackDto } from './dto';
-import { of } from 'rxjs';
-import { DataModule } from '../data';
-import { StackCategoryDto } from '../stacks/dto';
+import {Test} from '@nestjs/testing';
+import {CategoriesService} from './categories.service';
+import {CategoriesController} from './categories.controller';
+import {CategoryDto, CategoryStackDto} from './dto';
+import {of} from 'rxjs';
+import {DataModule} from '../data';
 
 describe('CategoriesController', () => {
   let categoriesController: CategoriesController;

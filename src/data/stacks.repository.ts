@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { Stack } from './model';
-import { Observable, throwError } from 'rxjs';
-import { catchError, filter, first, flatMap, toArray } from 'rxjs/operators';
-import { DataService } from './data.service';
+import {Injectable} from '@nestjs/common';
+import {Stack} from './model';
+import {Observable, throwError} from 'rxjs';
+import {catchError, filter, first, flatMap, toArray} from 'rxjs/operators';
+import {DataService} from './data.service';
 
 export interface StacksFilter {
   languages?: string[];

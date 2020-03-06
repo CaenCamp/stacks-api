@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { from, Observable, OperatorFunction } from 'rxjs';
-import { Category, Language, Stack } from './model';
+import {Injectable} from '@nestjs/common';
+import {from, Observable, OperatorFunction} from 'rxjs';
+import {Category, Language, Stack} from './model';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import { filter, flatMap, map, tap, toArray } from 'rxjs/operators';
-import { validate } from 'class-validator';
-import { plainToClass } from 'class-transformer';
+import {filter, flatMap, map, tap, toArray} from 'rxjs/operators';
+import {validate} from 'class-validator';
+import {plainToClass} from 'class-transformer';
 
 export const CATEGORIES = 'categories';
 export const LANGUAGES = 'languages';
@@ -16,7 +16,6 @@ declare type ClassType<T> = new (...args: any[]) => T;
 
 @Injectable()
 export class DataLoader {
-
   private static readDir(filePath: string): Observable<string[]> {
     return new Observable<string[]>(subscriber => {
       fs.readdir(filePath, (err, files) => {

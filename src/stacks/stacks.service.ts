@@ -1,8 +1,8 @@
-import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { StackCategoryDto, StackDto, StackLanguageDto } from './dto';
-import { LanguagesRepository, Category, Language, Stack, StacksRepository, CategoriesRepository } from '../data';
-import { Observable, throwError } from 'rxjs';
-import { catchError, flatMap, map, tap, toArray } from 'rxjs/operators';
+import {Injectable} from '@nestjs/common';
+import {StackCategoryDto, StackDto, StackLanguageDto} from './dto';
+import {CategoriesRepository, Category, Language, LanguagesRepository, Stack, StacksRepository} from '../data';
+import {Observable, throwError} from 'rxjs';
+import {catchError, flatMap, map, toArray} from 'rxjs/operators';
 
 @Injectable()
 export class StacksService {

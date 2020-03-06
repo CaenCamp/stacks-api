@@ -1,6 +1,6 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Category, Language, Stack } from './model';
-import { first } from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Category, Language, Stack} from './model';
+import {first} from 'rxjs/operators';
 
 export class DataService {
   private stacksSubject: BehaviorSubject<Stack[]>;
@@ -8,9 +8,9 @@ export class DataService {
   private categorySubject: BehaviorSubject<Category[]>;
 
   constructor(stacks: Stack[], languages: Language[], categories: Category[]) {
-      this.stacksSubject = new BehaviorSubject<Stack[]>(stacks);
-      this.languagesSubject = new BehaviorSubject<Language[]>(languages);
-      this.categorySubject = new BehaviorSubject<Category[]>(categories);
+    this.stacksSubject = new BehaviorSubject<Stack[]>(stacks);
+    this.languagesSubject = new BehaviorSubject<Language[]>(languages);
+    this.categorySubject = new BehaviorSubject<Category[]>(categories);
   }
 
   public get stacks$(): Observable<Stack[]> {

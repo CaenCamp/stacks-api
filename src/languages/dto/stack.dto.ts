@@ -5,13 +5,7 @@ export class LanguageStackDto {
   source: string;
   icon: string;
 
-  constructor(
-    id: string,
-    icon: string,
-    name: string,
-    source: string,
-    website: string,
-  ) {
+  constructor(id: string, icon: string, name: string, source: string, website: string) {
     this.id = id;
     this.icon = icon;
     this.name = name;
