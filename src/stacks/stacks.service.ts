@@ -2,7 +2,7 @@ import { HttpException, Injectable, InternalServerErrorException, NotFoundExcept
 import { StackCategoryDto, StackDto, StackLanguageDto } from './dto';
 import { LanguagesRepository, Category, Language, Stack, StacksRepository, CategoriesRepository } from '../data';
 import { Observable } from 'rxjs';
-import { catchError, flatMap, map, toArray } from 'rxjs/operators';
+import {catchError, flatMap, map, tap, toArray} from 'rxjs/operators';
 
 @Injectable()
 export class StacksService {
@@ -17,7 +17,7 @@ export class StacksService {
   public findAll(): Observable<StackDto[]> {
     return this.stacksRepository.findAll().pipe(
       flatMap((stacks: Stack[]) => stacks),
-      flatMap((stack: Stack) => this.stackLanguages$(stack)),
+      map((stack: Stack) => StacksService.getStackDto(stack)),
       toArray(),
       catchError(error => {
         throw this.handleError(error);
@@ -27,7 +27,7 @@ export class StacksService {
 
   public findOne(id: string): Observable<StackDto> {
     return this.stacksRepository.findOne(id).pipe(
-      flatMap((stack: Stack) => this.stackLanguages$(stack)),
+      map((stack: Stack) => StacksService.getStackDto(stack)),
       catchError(error => {
         throw this.handleError(error, id);
       }),
@@ -37,11 +37,37 @@ export class StacksService {
   public findLanguages(id: string): Observable<StackLanguageDto[]> {
     return this.stacksRepository.findOne(id).pipe(
       flatMap((stack: Stack) => this.stackLanguages$(stack)),
-      map((stack: StackDto) => stack.languages),
+      flatMap((languages: Language[]) => languages),
+      map((language: Language) => StacksService.getLanguageDto(language)),
+      toArray(),
       catchError((error: Error) => {
         throw this.handleError(error, id);
       }),
     );
+  }
+
+  public findCategories(id: string): Observable<StackCategoryDto[]> {
+    return this.stacksRepository.findOne(id).pipe(
+      flatMap((stack: Stack) => this.stackCategories$(stack)),
+      flatMap((categories: Category[]) => categories),
+      map((category: Category) => StacksService.getCategoryDto(category)),
+      toArray(),
+      catchError((error: Error) => {
+        throw this.handleError(error, id);
+      }),
+    );
+  }
+
+  private stackLanguages$(stack: Stack): Observable<Language[]> {
+    return this.languagesRepository
+      .findAll({ languages: stack.languages })
+      .pipe(map((languages: Language[]) => languages));
+  }
+
+  private stackCategories$(stack: Stack): Observable<Category[]> {
+    return this.categoriesRepository
+      .findAll({ categories: stack.categories })
+      .pipe(map((categories: Category[]) => categories));
   }
 
   private handleError(error: Error, id?: string): HttpException {
@@ -61,19 +87,7 @@ export class StacksService {
     return new StackCategoryDto(id, icon, name, summary);
   }
 
-  private stackLanguages$(stack: Stack): Observable<StackDto> {
-    return this.languagesRepository
-      .findAll({ languages: stack.languages })
-      .pipe(map((languages: Language[]) => this.getStackDto(stack, languages, [])));
-  }
-
-  private stackCategories$(stack: Stack): Observable<StackDto> {
-    return this.categoriesRepository
-      .findAll({ categories: stack.categories })
-      .pipe(map((categories: Category[]) => this.getStackDto(stack, [], categories)));
-  }
-
-  private getStackDto(stack: Stack, languages?: Language[], categories?: Category[]): StackDto {
+  private static getStackDto(stack: Stack): StackDto {
     const { icon, id, name, source, website } = stack;
     return new StackDto(
       id,
@@ -81,8 +95,6 @@ export class StacksService {
       name,
       source,
       website,
-      languages?.map((language: Language) => StacksService.getLanguageDto(language)),
-      categories?.map((category: Category) => StacksService.getCategoryDto(category)),
     );
   }
 }

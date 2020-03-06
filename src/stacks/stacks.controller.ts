@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { StacksService } from './stacks.service';
-import { StackDto, StackLanguageDto } from './dto';
+import { StackCategoryDto, StackDto, StackLanguageDto } from './dto';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 
@@ -37,7 +37,7 @@ export class StacksController {
     type: String,
     name: 'id',
   })
-  findCategoriesOfOne(@Param() { id }: { id: string }): Observable<StackDto> {
-    return this.stacksService.findOne(id);
+  findCategoriesOfOne(@Param() { id }: { id: string }): Observable<StackCategoryDto[]> {
+    return this.stacksService.findCategories(id);
   }
 }

@@ -4,8 +4,8 @@ export class Stack {
   website: string;
   source: string;
   icon: string;
-  languages: string[] = [];
-  categories: string[] = [];
+  languages?: string[] = [];
+  categories?: string[] = [];
 
   constructor(
     id: string,
@@ -13,8 +13,8 @@ export class Stack {
     website: string,
     source: string,
     icon: string,
-    languages: string[],
-    categories: string[],
+    languages?: string[],
+    categories?: string[],
   ) {
     this.id = id;
     this.name = name;
