@@ -1,8 +1,8 @@
-import {Injectable} from '@nestjs/common';
-import {Language} from './model';
-import {Observable} from 'rxjs';
-import {filter, first, flatMap, toArray} from 'rxjs/operators';
-import {DataService} from './data.service';
+import { Injectable } from '@nestjs/common';
+import { Language } from './model';
+import { Observable } from 'rxjs';
+import { filter, first, flatMap, toArray } from 'rxjs/operators';
+import { DataService } from './data.service';
 
 export interface LanguagesFilters {
   languages?: string[];

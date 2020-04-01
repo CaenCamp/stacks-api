@@ -1,9 +1,9 @@
-import {Test} from '@nestjs/testing';
-import {StacksService} from './stacks.service';
-import {StacksController} from './stacks.controller';
-import {StackCategoryDto, StackDto, StackLanguageDto} from './dto';
-import {of} from 'rxjs';
-import {DataModule} from '../data';
+import { Test } from '@nestjs/testing';
+import { StacksService } from './stacks.service';
+import { StacksController } from './stacks.controller';
+import { StackCategoryDto, StackDto, StackLanguageDto } from './dto';
+import { of } from 'rxjs';
+import { DataModule } from '../data';
 
 describe('StacksController', () => {
   let stacksController: StacksController;

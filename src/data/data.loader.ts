@@ -1,12 +1,12 @@
-import {Injectable} from '@nestjs/common';
-import {from, Observable, OperatorFunction} from 'rxjs';
-import {Category, Language, Stack} from './model';
+import { Injectable } from '@nestjs/common';
+import { from, Observable, OperatorFunction } from 'rxjs';
+import { Category, Language, Stack } from './model';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import {filter, flatMap, map, tap, toArray} from 'rxjs/operators';
-import {validate} from 'class-validator';
-import {plainToClass} from 'class-transformer';
+import { filter, flatMap, map, tap, toArray } from 'rxjs/operators';
+import { validate } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 
 export const CATEGORIES = 'categories';
 export const LANGUAGES = 'languages';

@@ -1,8 +1,8 @@
-import {Controller, Get, Param} from '@nestjs/common';
-import {CategoriesService} from './categories.service';
-import {ApiParam, ApiTags} from '@nestjs/swagger';
-import {Observable} from 'rxjs';
-import {CategoryDto, CategoryStackDto} from './dto';
+import { Controller, Get, Param } from '@nestjs/common';
+import { CategoriesService } from './categories.service';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { Observable } from 'rxjs';
+import { CategoryDto, CategoryStackDto } from './dto';
 
 @ApiTags('Categories')
 @Controller('categories')

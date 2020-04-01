@@ -1,6 +1,6 @@
-import {BehaviorSubject, Observable} from 'rxjs';
-import {Category, Language, Stack} from './model';
-import {first} from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Category, Language, Stack } from './model';
+import { first } from 'rxjs/operators';
 
 export class DataService {
   private stacksSubject: BehaviorSubject<Stack[]>;
