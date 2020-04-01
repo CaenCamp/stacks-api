@@ -2,7 +2,7 @@ id: angularjs
 name: AngularJS
 website: https://angularjs.org/
 source: https://github.com/angular/angular.js/
-icon: <unknown>
+icon: http://localhost:3000/icons/angularjs.svg
 languages:
   - javascript
 categories:

@@ -4,5 +4,11 @@
   "endOfLine": "auto",
   "printWidth": 120,
   "semi": true,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": "*.svg",
+      "options": { "parser": "html" }
+    }
+  ]
 }
