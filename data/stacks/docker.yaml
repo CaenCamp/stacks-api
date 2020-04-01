@@ -1,0 +1,7 @@
+id: docker
+name: Docker
+website: https://www.docker.com/
+source: https://github.com/docker
+icon: http://localhost:3000/icons/docker.svg
+categories:
+  - infrastructure

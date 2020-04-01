@@ -2,7 +2,7 @@ id: nestjs
 name: NestJS
 website: https://nestjs.com/
 source: https://github.com/nestjs/nest/
-icon: <unknown>
+icon: http://localhost:3000/icons/nestjs.svg
 languages:
   - javascript
   - typescript

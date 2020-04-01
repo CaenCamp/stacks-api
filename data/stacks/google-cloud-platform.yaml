@@ -1,0 +1,8 @@
+id: google-cloud-platform
+name: Google Cloud Platform
+website: https://cloud.google.com/
+icon: http://localhost:3000/icons/google-cloud-platform.svg
+categories:
+  - infrastructure
+alias:
+  - gcp

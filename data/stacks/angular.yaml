@@ -2,7 +2,7 @@ id: angular
 name: Angular
 website: https://angular.io/
 source: https://github.com/angular/angular
-icon: https://angular.io/assets/images/logos/angular/angular.svg
+icon: http://localhost:3000/icons/angular.svg
 languages:
   - typescript
   - javascript

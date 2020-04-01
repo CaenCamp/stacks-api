@@ -2,7 +2,7 @@ id: koajs
 name: KoaJS
 website: https://koajs.com/
 source: https://github.com/koajs/koa/
-icon: <unknown>
+icon: http://localhost:3000/icons/koajs.svg
 languages:
   - javascript
 categories:
