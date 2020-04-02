@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SearchDto, SearchLanguageDto, SearchStackDto } from './dto';
 import { Language, LanguagesRepository, Stack, StacksRepository } from '../data';
 import { Observable, throwError, zip } from 'rxjs';
-import { catchError, flatMap, map, toArray } from 'rxjs/operators';
+import { catchError, flatMap, map, mergeMap, tap, toArray } from 'rxjs/operators';
 
 @Injectable()
 export class SearchService {
@@ -11,7 +11,7 @@ export class SearchService {
     private readonly languagesRepository: LanguagesRepository,
   ) {}
 
-  public search(query: string): Observable<SearchDto> {
+  public search(query: string): Observable<SearchDto | any> {
     return zip(
       this.stacksRepository.findAll({ query }).pipe(
         flatMap((stacks: Stack[]) => stacks),
@@ -25,7 +25,11 @@ export class SearchService {
         toArray(),
         catchError((error: Error) => throwError(error)),
       ),
-    ).pipe(flatMap((results: Array<SearchStackDto[] | SearchLanguageDto[]>) => results));
+    ).pipe(
+      flatMap((results: Array<SearchStackDto[] | SearchLanguageDto[]>) => results),
+      mergeMap((results: SearchStackDto[] | SearchLanguageDto[]) => results),
+      toArray(),
+    );
   }
 
   private static getLanguageDto(language: Language): SearchLanguageDto {
