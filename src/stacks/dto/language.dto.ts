@@ -1,13 +1,13 @@
 export class StackLanguageDto {
   id: string;
   name: string;
-  url: string;
+  website: string;
   icon: string;
 
-  constructor(id: string, icon: string, name: string, url: string) {
+  constructor(id: string, icon: string, name: string, website: string) {
     this.id = id;
     this.name = name;
-    this.url = url;
+    this.website = website;
     this.icon = icon;
   }
 }

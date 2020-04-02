@@ -62,7 +62,7 @@ export class LanguagesService {
   }
 
   private static getLanguageDto(language: Language): LanguageDto {
-    const { icon, id, name, url } = language;
-    return new LanguageDto(id, icon, name, url);
+    const { icon, id, name, website } = language;
+    return new LanguageDto(id, icon, name, website);
   }
 }

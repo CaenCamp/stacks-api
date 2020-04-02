@@ -20,7 +20,7 @@ describe('StacksController', () => {
   const language: StackLanguageDto = {
     id: 'javascript',
     name: 'Javascript',
-    url: 'https://developer.mozilla.org/docs/Web/JavaScript',
+    website: 'https://developer.mozilla.org/docs/Web/JavaScript',
     icon: 'https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.png',
   };
   const category: StackCategoryDto = {

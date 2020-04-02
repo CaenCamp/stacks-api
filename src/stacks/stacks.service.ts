@@ -61,8 +61,8 @@ export class StacksService {
   }
 
   private static getLanguageDto(language: Language): StackLanguageDto {
-    const { name, icon, url, id } = language;
-    return new StackLanguageDto(id, icon, name, url);
+    const { name, icon, website, id } = language;
+    return new StackLanguageDto(id, icon, name, website);
   }
 
   private static getCategoryDto(category: Category): StackCategoryDto {

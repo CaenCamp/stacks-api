@@ -1,4 +1,15 @@
-import { SearchStackDto } from './stack.dto';
-import { SearchLanguageDto } from './language.dto';
+export class SearchDto {
+  id: string;
+  name: string;
+  website: string;
+  icon: string;
+  type: string;
 
-export type SearchDto = Array<SearchStackDto | SearchLanguageDto>;
+  constructor(id: string, icon: string, name: string, website: string, type: string) {
+    this.id = id;
+    this.name = name;
+    this.website = website;
+    this.icon = icon;
+    this.type = type;
+  }
+}

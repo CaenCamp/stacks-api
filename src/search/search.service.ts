@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { SearchDto, SearchLanguageDto, SearchStackDto } from './dto';
+import { SearchDto } from './dto';
 import { Language, LanguagesRepository, Stack, StacksRepository } from '../data';
 import { Observable, throwError, zip } from 'rxjs';
-import { catchError, flatMap, map, mergeMap, tap, toArray } from 'rxjs/operators';
+import { catchError, flatMap, map, mergeMap, toArray } from 'rxjs/operators';
 
 @Injectable()
 export class SearchService {
@@ -11,34 +11,34 @@ export class SearchService {
     private readonly languagesRepository: LanguagesRepository,
   ) {}
 
-  public search(query: string): Observable<SearchDto | any> {
-    return zip(
-      this.stacksRepository.findAll({ query }).pipe(
-        flatMap((stacks: Stack[]) => stacks),
-        map((stack: Stack) => SearchService.getStackDto(stack)),
-        toArray(),
-        catchError((error: Error) => throwError(error)),
-      ),
-      this.languagesRepository.findAll({ query }).pipe(
-        flatMap((languages: Language[]) => languages),
-        map((language: Language) => SearchService.getLanguageDto(language)),
-        toArray(),
-        catchError((error: Error) => throwError(error)),
-      ),
-    ).pipe(
-      flatMap((results: Array<SearchStackDto[] | SearchLanguageDto[]>) => results),
-      mergeMap((results: SearchStackDto[] | SearchLanguageDto[]) => results),
+  public search(query: string): Observable<SearchDto[]> {
+    return zip(this.searchStacks(query), this.searchLanguages(query)).pipe(
+      flatMap((results: Array<SearchDto[] | SearchDto[]>) => results),
+      mergeMap((results: SearchDto[] | SearchDto[]) => results),
       toArray(),
     );
   }
 
-  private static getLanguageDto(language: Language): SearchLanguageDto {
-    const { name, icon, url, id } = language;
-    return new SearchLanguageDto(id, icon, name, url);
+  public searchStacks(query: string): Observable<SearchDto[]> {
+    return this.stacksRepository.findAll({ query }).pipe(
+      flatMap((stacks: Stack[]) => stacks),
+      map((stack: Stack) => SearchService.getSearchDto(stack)),
+      toArray(),
+      catchError((error: Error) => throwError(error)),
+    );
   }
 
-  private static getStackDto(stack: Stack): SearchStackDto {
-    const { icon, id, name, source, website } = stack;
-    return new SearchStackDto(id, icon, name, source, website);
+  public searchLanguages(query: string): Observable<SearchDto[]> {
+    return this.languagesRepository.findAll({ query }).pipe(
+      flatMap((languages: Language[]) => languages),
+      map((language: Language) => SearchService.getSearchDto(language)),
+      toArray(),
+      catchError((error: Error) => throwError(error)),
+    );
+  }
+
+  private static getSearchDto(data: Stack | Language): SearchDto {
+    const { icon, id, name, website } = data;
+    return new SearchDto(id, icon, name, website, data.constructor.name.toLowerCase());
   }
 }

@@ -1,6 +1,6 @@
 id: vuejs
 name: Vue.js
-url: https://vuejs.org/
+website: https://vuejs.org/
 icon: http://localhost:3000/icons/vuejs.svg
 languages:
   - javascript

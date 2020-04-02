@@ -1,6 +1,6 @@
 id: javascript
 name: Javascript
-url: https://developer.mozilla.org/docs/Web/JavaScript
+website: https://developer.mozilla.org/docs/Web/JavaScript
 icon: http://localhost:3000/icons/javascript.svg
 aliases:
   - js
