@@ -6,6 +6,7 @@ import { DataService } from './data.service';
 
 export interface LanguagesFilters {
   languages?: string[];
+  query?: string;
 }
 
 @Injectable()
@@ -19,6 +20,14 @@ export class LanguagesRepository {
     let result = true;
     if (filters.languages != null) {
       result = result && filters.languages.includes(language.id);
+    }
+    if (filters.query != null) {
+      const query = filters.query.toLowerCase();
+      const name = language.name.toLowerCase();
+      const aliases = language.aliases?.map(alias => alias.toLowerCase());
+      const nameMatch: boolean = name.includes(query);
+      const aliasesMatch: string[] = aliases?.filter(alias => alias.includes(query)) || [];
+      result = result && (nameMatch || aliasesMatch.length > 0);
     }
     return result;
   }

@@ -6,6 +6,7 @@ export class Stack {
   icon: string;
   languages?: string[] = [];
   categories?: string[] = [];
+  aliases?: string[];
 
   constructor(
     id: string,
@@ -15,6 +16,7 @@ export class Stack {
     icon: string,
     languages?: string[],
     categories?: string[],
+    aliases?: string[],
   ) {
     this.id = id;
     this.name = name;
@@ -23,5 +25,6 @@ export class Stack {
     this.icon = icon;
     this.languages = languages;
     this.categories = categories;
+    this.aliases = aliases;
   }
 }

@@ -10,3 +10,5 @@ languages:
 categories:
   - web
   - frontend
+aliases:
+  - ng
